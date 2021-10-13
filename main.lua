@@ -1,6 +1,7 @@
 function love.load()
     love.window.setMode(1000, 768)
-    
+
+    class = require "libraries.middleclass"
     anim8 = require 'libraries/anim8/anim8'
     sti = require 'libraries/Simple-Tiled-Implementation/sti'
     cameraFile = require 'libraries/hump/camera'
@@ -10,12 +11,12 @@ function love.load()
     sounds = {}
     sounds.jump = love.audio.newSource("audio/jump.wav", "static")
     sounds.bonk = love.audio.newSource("audio/bonk.ogg", "static")
-    
-    sounds.music = love.audio.newSource("audio/music.mp3", "stream")
+
+    --[[sounds.music = love.audio.newSource("audio/music.mp3", "stream")
     sounds.music:setLooping(true)
     sounds.music:setVolume(0.1)
-    sounds.music:play()
-    
+    sounds.music:play()]]
+
 
     sprites = {}
     sprites.playerSheet = love.graphics.newImage('sprites/cirnoSheet.png')
@@ -40,6 +41,7 @@ function love.load()
     world:addCollisionClass('Danger')
 
     require('player')
+
     require('enemy')
     require('libraries/show')
 
@@ -49,10 +51,8 @@ function love.load()
     platforms = {}
     reses = {}
 
-    flagX = 0 
+    flagX = 0
     flagY = 0
-
-    coyote = 0
 
     saveData = {}
     saveData.currentLevel = "level1"
@@ -70,15 +70,17 @@ end
 function love.update(dt)
     world:update(dt)
     gameMap:update(dt)
-    playerUpdate(dt)
+
+    player:update(dt)
+
     updateEnemies(dt)
 
-    local px, py = player:getPosition()
+    local px, py = myPlayer.collider:getPosition()
     cam:lockX(px, cam.smooth.linear(10000))
     cam:lockY(py, cam.smooth.linear(5000))
     cam:zoomTo(0.7)
-    
-    local colliders = world:queryCircleArea(flagX, flagY, 10, {'Player'}) 
+
+    local colliders = world:queryCircleArea(flagX, flagY, 10, {'Player'})
     if #colliders > 0 then
         if saveData.currentLevel == "level1" then
         loadMap("level1")
@@ -93,17 +95,20 @@ function love.draw()
     cam:attach()
         gameMap:drawLayer(gameMap.layers["Tile Layer 1"])
         world:draw()
-        playerDraw()
+
+
+        player:draw()
+
         drawEnemies()
-    cam:detach()  
-    love.graphics.print(coyote,myFont)
-    
-    if player.grounded then
+    cam:detach()
+    love.graphics.print(myPlayer.coyote, myFont)
+
+    if myPlayer.grounded then
         love.graphics.print("True",myFont,40,40)
     else
         love.graphics.print("False",myFont,40,40)
     end
-    
+
 
 end
 
@@ -112,11 +117,11 @@ function spawnPlatform(x, y, width, height)
     platform:setType('static')
     table.insert(platforms, platform)
 end
-function spawnRes(x, y)
-    local res = world:queryCircleArea(x, y, 10, {'Player'}) 
+--[[function spawnRes(x, y)
+    local res = world:newCircleCollider(x, y, 10, {'Player'})
     res:setType('static')
     table.insert(reses, res)
-end
+end]]
 
 function destroyAll()
     local i = #platforms
@@ -142,12 +147,11 @@ function loadMap(mapName)
     saveData.currentLevel = level1
     love.filesystem.write("data.lua", table.show(saveData, "saveData"))
     destroyAll()
-    gameMap = sti("maps/level1.lua")
+    gameMap = sti("maps/real1.lua")
     for i, obj in pairs(gameMap.layers["Start"].objects) do
-        playerStartX = obj.x 
-        playerStartY = obj.y
+        myPlayer = Player:new(obj.x, obj.y)
     end
-    player:setPosition(playerStartX, playerStartY)
+
     for i, obj in pairs(gameMap.layers["Platforms"].objects) do
         spawnPlatform(obj.x, obj.y, obj.width, obj.height)
     end
@@ -155,11 +159,22 @@ function loadMap(mapName)
         spawnEnemy(obj.x, obj.y)
     end
     for i, obj in pairs(gameMap.layers["Flag"].objects) do
-        flagX = obj.x 
+        flagX = obj.x
         flagY = obj.y
     end
-    for i, obj in pairs(gameMap.layers["Res"].objects) do
+    --[[for i, obj in pairs(gameMap.layers["Res"].objects) do
         spawnRes(obj.x, obj.y)
+    end]]--
+end
+
+function love.keypressed(key)
+
+    player:keypressed(key)
+    
+    if key == 'r' then
+        loadMap("test")
+        myPlayer.collider:setLinearVelocity(0,0)
+        myPlayer.collider:setPosition(0,0)
     end
 end
 
@@ -167,7 +182,7 @@ end
 --[[function love.mousepressed(x, y, button)
     if button == 1 then
         local colliders = world:queryCircleArea(x, y, 200, {'Platform', 'Danger'})
-        for i,c in ipairs(colliders) do 
+        for i,c in ipairs(colliders) do
             c:destroy()
         end
     end
