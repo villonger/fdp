@@ -27,7 +27,6 @@ function love.load()
     animations = {}
     animations.idle = anim8.newAnimation(grid('1-2',2), 0.1)
     animations.run = anim8.newAnimation(grid('1-2',1), 0.1)
-   -- animations.enemy = anim8.newAnimation(enemyGrid('1-2',1), 0.03)
 
     wf = require 'libraries/windfield/windfield'
     world = wf.newWorld(0, 800, false)
