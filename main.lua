@@ -68,7 +68,7 @@ function love.update(dt)
     world:update(dt)
     gameMap:update(dt)
 
-    player:update(dt)
+    myPlayer:update(dt)
 
     updateEnemies(dt)
 
@@ -94,7 +94,7 @@ function love.draw()
         world:draw()
 
 
-        player:draw()
+        myPlayer:draw()
 
         drawEnemies()
     cam:detach()
@@ -166,12 +166,12 @@ end
 
 function love.keypressed(key)
 
-    player:keypressed(key)
+    myPlayer:keypressed(key)
     
     if key == 'r' then
         loadMap("test")
         myPlayer.collider:setLinearVelocity(0,0)
-        myPlayer.collider:setPosition(0,0)
+        myPlayer.collider:setPosition(myPlayer.startX,myPlayer.startY)
     end
 end
 
