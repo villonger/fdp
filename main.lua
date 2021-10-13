@@ -70,7 +70,9 @@ function love.update(dt)
 
     myPlayer:update(dt)
 
-    updateEnemies(dt)
+    for _, goomba in ipairs(goombas) do
+        Goomba:update(dt)
+    end
 
     local px, py = myPlayer.collider:getPosition()
     cam:lockX(px, cam.smooth.linear(10000))
@@ -95,8 +97,9 @@ function love.draw()
 
 
         myPlayer:draw()
-
-        drawEnemies()
+        for _, goomba in ipairs(goombas) do
+            Goomba:draw(dt)
+        end
     cam:detach()
     love.graphics.print(myPlayer.coyote, myFont)
 
@@ -130,12 +133,12 @@ function destroyAll()
         i = i-1
     end
 
-    local i = #enemies
+    local i = #goombas
     while i > -1 do
-        if enemies[i] ~= nil then
-            enemies[i]:destroy()
+        if goombas[i] ~= nil then
+            goombas[i]:destroy()
         end
-        table.remove(enemies, i)
+        table.remove(goombas, i)
         i = i-1
     end
 end
@@ -144,7 +147,7 @@ function loadMap(mapName)
     saveData.currentLevel = level1
     love.filesystem.write("data.lua", table.show(saveData, "saveData"))
     destroyAll()
-    gameMap = sti("maps/real1.lua")
+    gameMap = sti("maps/level1.lua")
     for i, obj in pairs(gameMap.layers["Start"].objects) do
         myPlayer = Player:new(obj.x, obj.y)
     end
@@ -152,8 +155,8 @@ function loadMap(mapName)
     for i, obj in pairs(gameMap.layers["Platforms"].objects) do
         spawnPlatform(obj.x, obj.y, obj.width, obj.height)
     end
-    for i, obj in pairs(gameMap.layers["Enemies"].objects) do
-        spawnEnemy(obj.x, obj.y)
+    for i, obj in pairs(gameMap.layers["Goombas"].objects) do
+        table.insert(goombas, Goomba:new(obj.x, obj.y))
     end
     for i, obj in pairs(gameMap.layers["Flag"].objects) do
         flagX = obj.x
