@@ -133,14 +133,14 @@ function destroyAll()
         i = i-1
     end
 
-    local i = #goombas
+  --[[  local i = #goombas
     while i > -1 do
         if goombas[i] ~= nil then
             goombas[i]:destroy()
         end
         table.remove(goombas, i)
         i = i-1
-    end
+    end]]
 end
 
 function loadMap(mapName)
