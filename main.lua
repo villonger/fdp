@@ -6,7 +6,7 @@ function love.load()
     sti = require 'libraries/Simple-Tiled-Implementation/sti'
     cameraFile = require 'libraries/hump/camera'
 
-    cam = cameraFile()
+    
 
     sounds = {}
     sounds.jump = love.audio.newSource("audio/jump.wav", "static")
@@ -29,13 +29,6 @@ function love.load()
     animations.run = anim8.newAnimation(grid('1-2',1), 0.1)
 
     wf = require 'libraries/windfield/windfield'
-    world = wf.newWorld(0, 800, false)
-    world:setQueryDebugDrawing(true)
-    world:setGravity(0,2000)
-
-    world:addCollisionClass('Platform')
-    world:addCollisionClass('Player'--[[, {ignores = {'Platform'}}]])
-    world:addCollisionClass('Danger')
 
     require('player')
 
@@ -45,11 +38,6 @@ function love.load()
     --dangerZone = world:newRectangleCollider(-500, 800, 10000, 50, {collision_class = "Danger"})
     --dangerZone:setType('static')
 
-    platforms = {}
-    reses = {}
-
-    flagX = 0
-    flagY = 0
 
     saveData = {}
     saveData.currentLevel = "level1"
@@ -71,7 +59,7 @@ function love.update(dt)
     myPlayer:update(dt)
 
     for _, goomba in ipairs(goombas) do
-        Goomba:update(dt)
+        goomba:update(dt)
     end
 
     local px, py = myPlayer.collider:getPosition()
@@ -98,7 +86,7 @@ function love.draw()
 
         myPlayer:draw()
         for _, goomba in ipairs(goombas) do
-            Goomba:draw(dt)
+            goomba:draw(dt)
         end
     cam:detach()
     love.graphics.print(myPlayer.coyote, myFont)
@@ -133,21 +121,38 @@ function destroyAll()
         i = i-1
     end
 
-  --[[  local i = #goombas
-    while i > -1 do
-        if goombas[i] ~= nil then
-            goombas[i]:destroy()
-        end
-        table.remove(goombas, i)
-        i = i-1
-    end]]
+    local i = #goombas
+    for i = #goombas, 1, -1 do
+        goombas[i]:destroy()
+    end
 end
 
 function loadMap(mapName)
+    
+    platforms = {}
+    reses = {}
+    goombas = {}
+    flagX = 0
+    flagY = 0
+    
+    cam = cameraFile()
+
     saveData.currentLevel = level1
+
     love.filesystem.write("data.lua", table.show(saveData, "saveData"))
+
     destroyAll()
+
     gameMap = sti("maps/level1.lua")
+
+    world = wf.newWorld(0, 800, false)
+    world:setQueryDebugDrawing(true)
+    world:setGravity(0,2000)
+
+    world:addCollisionClass('Platform')
+    world:addCollisionClass('Player'--[[, {ignores = {'Platform'}}]])
+    world:addCollisionClass('Danger')
+
     for i, obj in pairs(gameMap.layers["Start"].objects) do
         myPlayer = Player:new(obj.x, obj.y)
     end
@@ -165,6 +170,8 @@ function loadMap(mapName)
     --[[for i, obj in pairs(gameMap.layers["Res"].objects) do
         spawnRes(obj.x, obj.y)
     end]]--
+
+
 end
 
 function love.keypressed(key)

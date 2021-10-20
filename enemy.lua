@@ -7,6 +7,10 @@ function Goomba:initialize(x, y)
     self.animation = animations.goomba
 end
 
+function Goomba:destroy()
+self.body:destroy()
+end
+
 function Goomba:update(dt)
 end
 
