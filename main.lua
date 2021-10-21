@@ -111,22 +111,6 @@ end
     table.insert(reses, res)
 end]]
 
-function destroyAll()
-    local i = #platforms
-    while i > -1 do
-        if platforms[i] ~= nil then
-            platforms[i]:destroy()
-        end
-        table.remove(platforms, i)
-        i = i-1
-    end
-
-    local i = #goombas
-    for i = #goombas, 1, -1 do
-        goombas[i]:destroy()
-    end
-end
-
 function loadMap(mapName)
     
     platforms = {}
@@ -134,14 +118,12 @@ function loadMap(mapName)
     goombas = {}
     flagX = 0
     flagY = 0
-    
+
     cam = cameraFile()
 
     saveData.currentLevel = level1
 
     love.filesystem.write("data.lua", table.show(saveData, "saveData"))
-
-    destroyAll()
 
     gameMap = sti("maps/level1.lua")
 
@@ -174,16 +156,21 @@ function loadMap(mapName)
 
 end
 
+function Reset()
+    loadMap("test")
+    myPlayer.collider:setLinearVelocity(0,0)
+    myPlayer.collider:setPosition(myPlayer.startX,myPlayer.startY)
+end
+
 function love.keypressed(key)
 
     myPlayer:keypressed(key)
     
     if key == 'r' then
-        loadMap("test")
-        myPlayer.collider:setLinearVelocity(0,0)
-        myPlayer.collider:setPosition(myPlayer.startX,myPlayer.startY)
+        Reset()
     end
 end
+
 
 
 --[[function love.mousepressed(x, y, button)
