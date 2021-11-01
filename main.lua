@@ -31,7 +31,7 @@ function love.load()
     wf = require 'libraries/windfield/windfield'
 
     require('player')
-
+    require('platform')
     require('enemy')
     require('libraries/show')
 
@@ -105,11 +105,7 @@ function spawnRamp(x1, y1, x2, y2, x3, y3)
 end
 
 
-function spawnPlatform(x, y, width, height)
-    local platform = world:newRectangleCollider(x, y, width, height, {collision_class = "Platform"})
-    platform:setType('static')
-    table.insert(platforms, platform)
-end
+
 --[[function spawnRes(x, y)
     local res = world:newCircleCollider(x, y, 10, {'Player'})
     res:setType('static')
@@ -149,7 +145,8 @@ function loadMap(mapName)
     end
 
     for i, obj in pairs(gameMap.layers["Platforms"].objects) do
-        spawnPlatform(obj.x, obj.y, obj.width, obj.height)
+        --spawnPlatform(obj.x, obj.y, obj.width, obj.height)
+        table.insert(platforms, Platform:new(obj))
     end
     for i, obj in pairs(gameMap.layers["Goombas"].objects) do
         table.insert(goombas, Goomba:new(obj.x, obj.y))

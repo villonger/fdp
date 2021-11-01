@@ -8,8 +8,8 @@ return {
   height = 12,
   tilewidth = 64,
   tileheight = 64,
-  nextlayerid = 13,
-  nextobjectid = 122,
+  nextlayerid = 12,
+  nextobjectid = 124,
   properties = {},
   tilesets = {
     {
@@ -284,24 +284,9 @@ return {
           rotation = 0,
           visible = true,
           properties = {}
-        }
-      }
-    },
-    {
-      type = "objectgroup",
-      draworder = "topdown",
-      id = 12,
-      name = "Polygons",
-      visible = true,
-      opacity = 1,
-      offsetx = 0,
-      offsety = 0,
-      parallaxx = 1,
-      parallaxy = 1,
-      properties = {},
-      objects = {
+        },
         {
-          id = 121,
+          id = 119,
           name = "",
           type = "",
           shape = "polygon",
@@ -315,6 +300,41 @@ return {
             { x = 0, y = 0 },
             { x = 192, y = -128 },
             { x = 192, y = 0 }
+          },
+          properties = {}
+        },
+        {
+          id = 123,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 1088,
+          y = 256,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 64, y = -64 },
+            { x = 64, y = -128 },
+            { x = 0, y = -128 },
+            { x = 0, y = -192 },
+            { x = -64, y = -192 },
+            { x = -64, y = -128 },
+            { x = -128, y = -128 },
+            { x = -128, y = -192 },
+            { x = -192, y = -192 },
+            { x = -256, y = -128 },
+            { x = -256, y = -64 },
+            { x = -192, y = -64 },
+            { x = -128, y = 0 },
+            { x = -64, y = -64 },
+            { x = -64, y = 0 },
+            { x = -64, y = 128 },
+            { x = 0, y = 64 },
+            { x = 64, y = 64 },
+            { x = 64, y = 0 }
           },
           properties = {}
         }
