@@ -1,5 +1,5 @@
 function love.load()
-    love.window.setMode(1000, 768)
+    love.window.setMode(1280, 768)
 
     class = require "libraries.middleclass"
     anim8 = require 'libraries/anim8/anim8'
@@ -69,11 +69,7 @@ function love.update(dt)
 
     local colliders = world:queryCircleArea(flagX, flagY, 10, {'Player'})
     if #colliders > 0 then
-        if saveData.currentLevel == "level1" then
-        loadMap("level1")
-        elseif saveData.currentLevel == "level1" then
-            loadMap("level1")
-        end
+        Reset()
     end
 end
 
@@ -85,9 +81,11 @@ function love.draw()
 
 
         myPlayer:draw()
+
         for _, goomba in ipairs(goombas) do
             goomba:draw(dt)
         end
+
     cam:detach()
     love.graphics.print(myPlayer.coyote, myFont)
 
@@ -99,6 +97,13 @@ function love.draw()
 
 
 end
+
+
+function spawnRamp(x1, y1, x2, y2, x3, y3)
+
+
+end
+
 
 function spawnPlatform(x, y, width, height)
     local platform = world:newRectangleCollider(x, y, width, height, {collision_class = "Platform"})
@@ -119,6 +124,8 @@ function loadMap(mapName)
     flagX = 0
     flagY = 0
 
+    
+
     cam = cameraFile()
 
     saveData.currentLevel = level1
@@ -135,6 +142,8 @@ function loadMap(mapName)
     world:addCollisionClass('Player'--[[, {ignores = {'Platform'}}]])
     world:addCollisionClass('Danger')
 
+    polygon = world:newPolygonCollider({1088, 320, 1152, 384, 1088, 384})
+
     for i, obj in pairs(gameMap.layers["Start"].objects) do
         myPlayer = Player:new(obj.x, obj.y)
     end
@@ -149,11 +158,10 @@ function loadMap(mapName)
         flagX = obj.x
         flagY = obj.y
     end
+    
     --[[for i, obj in pairs(gameMap.layers["Res"].objects) do
         spawnRes(obj.x, obj.y)
     end]]--
-
-
 end
 
 function Reset()

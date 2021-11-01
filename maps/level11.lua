@@ -291,7 +291,7 @@ return {
       type = "objectgroup",
       draworder = "topdown",
       id = 12,
-      name = "Polygons",
+      name = "Ramp",
       visible = true,
       opacity = 1,
       offsetx = 0,
