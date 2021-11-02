@@ -137,9 +137,7 @@ function loadMap(mapName)
     world:addCollisionClass('Platform')
     world:addCollisionClass('Player'--[[, {ignores = {'Platform'}}]])
     world:addCollisionClass('Danger')
-
-    polygon = world:newPolygonCollider({1088, 320, 1152, 384, 1088, 384})
-
+    
     for i, obj in pairs(gameMap.layers["Start"].objects) do
         myPlayer = Player:new(obj.x, obj.y)
     end
